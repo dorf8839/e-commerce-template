@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route, Link, BrowserRouter as Router } from "react-router-dom";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 import AddProduct from "./components/AddProduct";
 import Cart from "./components/Cart";
@@ -18,6 +20,45 @@ export default class App extends Component {
     };
     this.routerRef = React.createRef();
   }
+
+  async componentDidMount() {
+    let user = localStorage.getItem("user");
+    const products = await axios.get("http://localhost:3001/products");
+    user = user ? JSON.parse(user) : null;
+    this.setState({ user, products: products.data });
+  }
+
+  login = async (email, password) => {
+    const res = await axios.post(
+      "http://localhost:3001/login",
+      { email, password },
+    ).catch((res) => {
+      return { status: 401, message: "Unauthorized" }
+    })
+    /*For a more robust solution to prevent a user from changing their access
+    level in the client, a second request could be made to get the user's
+    permissions when a user logins in, or whenver the app loads.*/
+    if (res.status === 200) {
+      const { email } = jwt_decode(res.data.accessToken);
+      const user = {
+        email,
+        token: res.data.accessToken,
+        accessLevel: email === "admin@example.com" ? 0 : 1
+      }
+
+      this.setState({ user });
+      localStorage.setItem("user", JSON.stringify(user));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  logout = e => {
+    e.preventDefault();
+    this.setState({ user: null });
+    localStorage.removeItem("user");
+  };
 
   render() {
     return (
