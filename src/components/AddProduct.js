@@ -31,7 +31,7 @@ class AddProduct extends Component {
         { id, name, price, stock, shortDesc, description },
       )
 
-      this.props.context.AddProduct(
+      this.props.context.addProduct(
         {
           name,
           price,
