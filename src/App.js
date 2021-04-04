@@ -23,9 +23,13 @@ export default class App extends Component {
 
   async componentDidMount() {
     let user = localStorage.getItem("user");
+    let cart = localStorage.getItem("cart");
+
     const products = await axios.get("http://localhost:3001/products");
     user = user ? JSON.parse(user) : null;
-    this.setState({ user, products: products.data });
+    cart = cart ? JSON.parse(cart) : {};
+
+    this.setState({ user, products: products.data, cart });
   }
 
   login = async (email, password) => {
@@ -64,6 +68,33 @@ export default class App extends Component {
     let products = this.state.products.slice();
     products.push(product);
     this.setState({ products }, () => callback && callback());
+  };
+
+  addToCart = cartItem => {
+    let cart = this.state.cart;
+    if (cart[cartItem.id]) {
+      cart[cartItem.id].amount += cartItem.amount;
+    } else {
+      cart[cartItem.id] = cartItem;
+    }
+    if (cart[cartItem.id].amount > cart[cartItem.id].product.stock) {
+      cart[cartItem.id].amount = cart[cartItem.id].product.stock;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.setState({ cart });
+  };
+
+  removeFromCart = cartItemId => {
+    let cart = this.state.cart;
+    delete cart[cartItemId];
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.setState({ cart });
+  };
+
+  clearCart = () => {
+    let cart = {};
+    localStorage.removeItem("cart");
+    this.setState({ cart });
   };
 
   render() {
