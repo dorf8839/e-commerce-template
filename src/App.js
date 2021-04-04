@@ -60,6 +60,12 @@ export default class App extends Component {
     localStorage.removeItem("user");
   };
 
+  addProduct = (product, callback) => {
+    let products = this.state.products.slice();
+    products.push(product);
+    this.setState({ products }, () => callback && callback());
+  };
+
   render() {
     return (
       <Context.Provider
