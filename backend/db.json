@@ -51,6 +51,14 @@
       "stock": "200",
       "shortDesc": "Custom made cakes",
       "description": "Just let us know the flavor and design of the cake and we will make it for you!"
+    },
+    {
+      "id": "evkswb9snekn3mbrjf",
+      "name": "Cookies",
+      "price": "6",
+      "stock": "50",
+      "shortDesc": "Cookies for all!",
+      "description": "Chocolate chip, apple butter, pumpkin, snickerdoodle.  You name it, we got it!"
     }
   ]
 }
