@@ -1,6 +1,6 @@
 import React from "react";
 
-const CartItem = props => {
+export default function CartItem (props) {
   const { cartItem, cartKey } = props;
   const { product, amount } = cartItem;
 
@@ -35,5 +35,3 @@ const CartItem = props => {
     </div>
   );
 };
-
-export default CartItem;

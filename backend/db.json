@@ -59,6 +59,78 @@
       "stock": 49,
       "shortDesc": "Cookies for all!",
       "description": "Chocolate chip, apple butter, pumpkin, snickerdoodle.  You name it, we got it!"
+    },
+    {
+      "id": "vyz4qfpkmjhkn6itby9",
+      "name": "Test",
+      "price": "1",
+      "stock": "5",
+      "shortDesc": "A quick test",
+      "description": "A test of using functions with hooks instead of class components with state"
+    },
+    {
+      "id": "of6ykacag8qkn6ix5na",
+      "name": "Another Test",
+      "price": "5",
+      "stock": "200",
+      "shortDesc": "Test for save function",
+      "description": "A test to determine if the destructuring of initState is working in the save function"
+    },
+    {
+      "id": "seslqsuleuekn6iylho",
+      "name": "test",
+      "price": "5",
+      "stock": "1",
+      "shortDesc": "A quick test",
+      "description": "A test to determine if the destructuring of initState is working in the save function"
+    },
+    {
+      "id": "gkj3815wwjukn6j14fz",
+      "name": "Clear test",
+      "price": "100",
+      "stock": "12",
+      "shortDesc": "Another test",
+      "description": "Test to determine if the form clears after submit"
+    },
+    {
+      "id": "9pcorczodkikn6j3k6z",
+      "name": "test",
+      "price": "1",
+      "stock": "2",
+      "shortDesc": "test",
+      "description": "test"
+    },
+    {
+      "id": "uq803aa0p4kn6j5dy0",
+      "name": "test",
+      "price": "1",
+      "stock": "2",
+      "shortDesc": "test",
+      "description": "test"
+    },
+    {
+      "id": "7790hl33vvmkn6jbpuf",
+      "name": "Flash Test",
+      "price": "1",
+      "stock": "2",
+      "shortDesc": "Test",
+      "description": "Test to ensure flash message still works and is in the updated location"
+    },
+    {
+      "id": "3j1qbmebboykn6jefhf",
+      "name": "test",
+      "price": "1",
+      "stock": "2",
+      "shortDesc": "test",
+      "description": "test"
+    },
+    {
+      "id": "rmyy5vg3zhkn6jv1g3",
+      "name": "rwar",
+      "price": "1",
+      "stock": "3",
+      "shortDesc": "asdf",
+      "description": "asdf"
     }
   ]
 }

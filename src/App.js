@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Switch, Route, Link, BrowserRouter as Router } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -10,29 +10,32 @@ import ProductList from "./components/ProductList";
 
 import Context from "./Context";
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null,
-      cart: {},
-      products: []
-    };
-    this.routerRef = React.createRef();
-  }
+export default function App(props) {
+  const [user, setUser] = useState(null);
+  const [cart, setCart] = useState({});
+  const [products, setProducts] = useState([]);
+  const [showMenu, setShowMenu] = useState(false);
+  const routerRef = React.createRef();
 
-  async componentDidMount() {
+  useEffect(() => {
     let user = localStorage.getItem("user");
     let cart = localStorage.getItem("cart");
 
-    const products = await axios.get("http://localhost:3001/products");
+    async function fetchData() {
+      return await axios.get("http://localhost:3001/products");
+    }
+    const products = fetchData();
     user = user ? JSON.parse(user) : null;
     cart = cart ? JSON.parse(cart) : {};
+    console.dir(products);
+    console.dir(user);
+    console.dir(cart);
+    setUser(user);
+    setCart(cart);
+    setProducts(products.data);
+  }, [])
 
-    this.setState({ user, products: products.data, cart });
-  }
-
-  login = async (email, password) => {
+  async function login(email, password) {
     const res = await axios.post(
       "http://localhost:3001/login",
       { email, password },
@@ -50,7 +53,7 @@ export default class App extends Component {
         accessLevel: email === "admin@example.com" ? 0 : 1
       }
 
-      this.setState({ user });
+      setUser({ user });
       localStorage.setItem("user", JSON.stringify(user));
       return true;
     } else {
@@ -58,54 +61,53 @@ export default class App extends Component {
     }
   }
 
-  logout = e => {
+  function logout(e) {
     e.preventDefault();
-    this.setState({ user: null });
+    setUser(null);
     localStorage.removeItem("user");
   };
 
-  addProduct = (product, callback) => {
-    let products = this.state.products.slice();
-    products.push(product);
-    this.setState({ products }, () => callback && callback());
+  function addProduct(product, callback) {
+    //could possibly clean up with spread syntax (...products)
+    let tempProduct = products.slice();
+    tempProduct.push(product);
+    setProducts({ tempProduct }, () => callback && callback());
   };
 
-  addToCart = cartItem => {
-    let cart = this.state.cart;
-    if (cart[cartItem.id]) {
-      cart[cartItem.id].amount += cartItem.amount;
+  function addToCart(cartItem) {
+    let tempCart = cart;
+    if (tempCart[cartItem.id]) {
+      tempCart[cartItem.id].amount += cartItem.amount;
     } else {
-      cart[cartItem.id] = cartItem;
+      tempCart[cartItem.id] = cartItem;
     }
-    if (cart[cartItem.id].amount > cart[cartItem.id].product.stock) {
-      cart[cartItem.id].amount = cart[cartItem.id].product.stock;
+    if (tempCart[cartItem.id].amount > tempCart[cartItem.id].product.stock) {
+      tempCart[cartItem.id].amount = tempCart[cartItem.id].product.stock;
     }
-    localStorage.setItem("cart", JSON.stringify(cart));
-    this.setState({ cart });
+    localStorage.setItem("cart", JSON.stringify(tempCart));
+    setCart({ tempCart });
   };
 
-  removeFromCart = cartItemId => {
-    let cart = this.state.cart;
-    delete cart[cartItemId];
-    localStorage.setItem("cart", JSON.stringify(cart));
-    this.setState({ cart });
+  function removeFromCart(cartItemId) {
+    let tempCart = cart;
+    delete tempCart[cartItemId];
+    localStorage.setItem("cart", JSON.stringify(tempCart));
+    setCart({ tempCart });
   };
 
-  clearCart = () => {
-    let cart = {};
+  function clearCart() {
+    // let cart = {};
     localStorage.removeItem("cart");
-    this.setState({ cart });
+    setCart({});
   };
 
-  checkout = () => {
-    if (!this.state.user) {
-      this.routerRef.current.history.push("/login");
+  function checkout() {
+    if (!user) {
+      routerRef.current.history.push("/login");
       return;
     }
 
-    const cart = this.state.cart;
-
-    const products = this.state.products.map(p => {
+    const tempProducts = products.map(p => {
       if (cart[p.name]) {
         p.stock = p.stock - cart[p.name].amount;
 
@@ -117,87 +119,279 @@ export default class App extends Component {
       return p;
     });
 
-    this.setState({ products });
-    this.clearCart();
+    setProducts({ tempProducts });
+    clearCart();
   }
 
-  render() {
-    return (
-      <Context.Provider
-        value={{
-          ...this.state,
-          removeFromCart: this.removeFromCart,
-          addToCart: this.addToCart,
-          login: this.login,
-          addProduct: this.addProduct,
-          clearCart: this.clearCart,
-          checkout: this.checkout
-        }}
-      >
-        <Router ref={this.routerRef}>
-          <div className="App">
-            <nav
-              className="navbar container"
-              role="navigation"
-              aria-label="main navigation"
-            >
-              <div className="navbar-brand">
-                <b className="navbar-item is-size-4">ecommerce</b>
-                <label
-                  role="button"
-                  class="navbar-burger burger"
-                  aria-label="menu"
-                  aria-expanded="false"
-                  data-target="navbarBasicExample"
-                  onClick={e => {
-                    e.preventDefault();
-                    this.setState({ showMenu: !this.state.showMenu });
-                  }}
+  return (
+    <Context.Provider
+      value={{
+        user,
+        cart,
+        products,
+        removeFromCart: removeFromCart(),
+        addToCart: addToCart(),
+        login: login(),
+        addProduct: addProduct(),
+        clearCart: clearCart(),
+        checkout: checkout()
+      }}
+    >
+      <Router ref={routerRef}>
+        <div className="App">
+          <nav
+            className="navbar container"
+            role="navigation"
+            aria-label="main navigation"
+          >
+            <div className="navbar-brand">
+              <b className="navbar-item is-size-4">ecommerce</b>
+              <label
+                role="button"
+                class="navbar-burger burger"
+                aria-label="menu"
+                aria-expanded="false"
+                data-target="navbarBasicExample"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowMenu(!showMenu);
+                }}
+              >
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </label>
+            </div>
+            <div className={`navbar-menu ${showMenu ? "is-active" : ""}`}>
+              <Link to="/products" className="navbar-item">
+                Products
+              </Link>
+              {user && user.accessLevel < 1 && (
+                <Link to="/add-product" className="navbar-item">
+                  Add Product
+                </Link>
+              )}
+              <Link to="/cart" className="navbar-item">
+                Cart
+                <span
+                  className="tag is-primary"
+                  style={{ marginLeft: "5px" }}
                 >
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-                </label>
-              </div>
-              <div className={`navbar-menu ${this.state.showMenu ? "is-active" : ""}`}>
-                <Link to="/products" className="navbar-item">
-                  Products
+                  {Object.keys(cart).length}
+                </span>
+              </Link>
+              {!user ? (
+                <Link to="/login" className="navbar-item">
+                  Login
                 </Link>
-                {this.state.user && this.state.user.accessLevel < 1 && (
-                  <Link to="/add-product" className="navbar-item">
-                    Add Product
-                  </Link>
-                )}
-                <Link to="/cart" className="navbar-item">
-                  Cart
-                  <span
-                    className="tag is-primary"
-                    style={{ marginLeft: "5px" }}
-                  >
-                    {Object.keys(this.state.cart).length}
-                  </span>
+              ) : (
+                <Link to="/" onClick={logout} className="navbar-item">
+                  Logout
                 </Link>
-                {!this.state.user ? (
-                  <Link to="/login" className="navbar-item">
-                    Login
-                  </Link>
-                ) : (
-                  <Link to="/" onClick={this.logout} className="navbar-item">
-                    Logout
-                  </Link>
-                )}
-              </div>
-            </nav>
-            <Switch>
-              <Route exact path="/" component={ProductList} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/cart" component={Cart} />
-              <Route exact path="/add-product" component={AddProduct} />
-              <Route exact path="/products" component={ProductList} />
-            </Switch>
-          </div>
-        </Router>
-      </Context.Provider>
-    );
-  }
+              )}
+            </div>
+          </nav>
+          <Switch>
+            <Route exact path="/" component={ProductList} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/cart" component={Cart} />
+            <Route exact path="/add-product" component={AddProduct} />
+            <Route exact path="/products" component={ProductList} />
+          </Switch>
+        </div>
+      </Router>
+    </Context.Provider>
+  );
 }
+
+// export default class App extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       user: null,
+//       cart: {},
+//       products: []
+//     };
+//     this.routerRef = React.createRef();
+//   }
+
+//   async componentDidMount() {
+//     let user = localStorage.getItem("user");
+//     let cart = localStorage.getItem("cart");
+
+//     const products = await axios.get("http://localhost:3001/products");
+//     user = user ? JSON.parse(user) : null;
+//     cart = cart ? JSON.parse(cart) : {};
+
+//     this.setState({ user, products: products.data, cart });
+//   }
+
+//   login = async (email, password) => {
+//     const res = await axios.post(
+//       "http://localhost:3001/login",
+//       { email, password },
+//     ).catch((res) => {
+//       return { status: 401, message: "Unauthorized" }
+//     })
+//     /*For a more robust solution to prevent a user from changing their access
+//     level in the client, a second request could be made to get the user's
+//     permissions when a user logins in, or whenver the app loads.*/
+//     if (res.status === 200) {
+//       const { email } = jwt_decode(res.data.accessToken);
+//       const user = {
+//         email,
+//         token: res.data.accessToken,
+//         accessLevel: email === "admin@example.com" ? 0 : 1
+//       }
+
+//       this.setState({ user });
+//       localStorage.setItem("user", JSON.stringify(user));
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   }
+
+//   logout = e => {
+//     e.preventDefault();
+//     this.setState({ user: null });
+//     localStorage.removeItem("user");
+//   };
+
+//   addProduct = (product, callback) => {
+//     let products = this.state.products.slice();
+//     products.push(product);
+//     this.setState({ products }, () => callback && callback());
+//   };
+
+//   addToCart = cartItem => {
+//     let cart = this.state.cart;
+//     if (cart[cartItem.id]) {
+//       cart[cartItem.id].amount += cartItem.amount;
+//     } else {
+//       cart[cartItem.id] = cartItem;
+//     }
+//     if (cart[cartItem.id].amount > cart[cartItem.id].product.stock) {
+//       cart[cartItem.id].amount = cart[cartItem.id].product.stock;
+//     }
+//     localStorage.setItem("cart", JSON.stringify(cart));
+//     this.setState({ cart });
+//   };
+
+//   removeFromCart = cartItemId => {
+//     let cart = this.state.cart;
+//     delete cart[cartItemId];
+//     localStorage.setItem("cart", JSON.stringify(cart));
+//     this.setState({ cart });
+//   };
+
+//   clearCart = () => {
+//     let cart = {};
+//     localStorage.removeItem("cart");
+//     this.setState({ cart });
+//   };
+
+//   checkout = () => {
+//     if (!this.state.user) {
+//       this.routerRef.current.history.push("/login");
+//       return;
+//     }
+
+//     const cart = this.state.cart;
+
+//     const products = this.state.products.map(p => {
+//       if (cart[p.name]) {
+//         p.stock = p.stock - cart[p.name].amount;
+
+//         axios.put(
+//           `http://localhost:3001/products/${p.id}`,
+//           { ...p },
+//         )
+//       }
+//       return p;
+//     });
+
+//     this.setState({ products });
+//     this.clearCart();
+//   }
+
+//   render() {
+//     return (
+//       <Context.Provider
+//         value={{
+//           ...this.state,
+//           removeFromCart: this.removeFromCart,
+//           addToCart: this.addToCart,
+//           login: this.login,
+//           addProduct: this.addProduct,
+//           clearCart: this.clearCart,
+//           checkout: this.checkout
+//         }}
+//       >
+//         <Router ref={this.routerRef}>
+//           <div className="App">
+//             <nav
+//               className="navbar container"
+//               role="navigation"
+//               aria-label="main navigation"
+//             >
+//               <div className="navbar-brand">
+//                 <b className="navbar-item is-size-4">ecommerce</b>
+//                 <label
+//                   role="button"
+//                   class="navbar-burger burger"
+//                   aria-label="menu"
+//                   aria-expanded="false"
+//                   data-target="navbarBasicExample"
+//                   onClick={e => {
+//                     e.preventDefault();
+//                     this.setState({ showMenu: !this.state.showMenu });
+//                   }}
+//                 >
+//                   <span aria-hidden="true"></span>
+//                   <span aria-hidden="true"></span>
+//                   <span aria-hidden="true"></span>
+//                 </label>
+//               </div>
+//               <div className={`navbar-menu ${this.state.showMenu ? "is-active" : ""}`}>
+//                 <Link to="/products" className="navbar-item">
+//                   Products
+//                 </Link>
+//                 {this.state.user && this.state.user.accessLevel < 1 && (
+//                   <Link to="/add-product" className="navbar-item">
+//                     Add Product
+//                   </Link>
+//                 )}
+//                 <Link to="/cart" className="navbar-item">
+//                   Cart
+//                   <span
+//                     className="tag is-primary"
+//                     style={{ marginLeft: "5px" }}
+//                   >
+//                     {Object.keys(this.state.cart).length}
+//                   </span>
+//                 </Link>
+//                 {!this.state.user ? (
+//                   <Link to="/login" className="navbar-item">
+//                     Login
+//                   </Link>
+//                 ) : (
+//                   <Link to="/" onClick={this.logout} className="navbar-item">
+//                     Logout
+//                   </Link>
+//                 )}
+//               </div>
+//             </nav>
+//             <Switch>
+//               <Route exact path="/" component={ProductList} />
+//               <Route exact path="/login" component={Login} />
+//               <Route exact path="/cart" component={Cart} />
+//               <Route exact path="/add-product" component={AddProduct} />
+//               <Route exact path="/products" component={ProductList} />
+//             </Switch>
+//           </div>
+//         </Router>
+//       </Context.Provider>
+//     );
+//   }
+// }

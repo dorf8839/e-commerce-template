@@ -2,7 +2,7 @@ import React from "react";
 import withContext from "../withContext";
 import CartItem from "./CartItem";
 
-const Cart = props => {
+function Cart (props) {
   const { cart } = props.context;
   const cartKeys = Object.keys(cart || {});
   return (

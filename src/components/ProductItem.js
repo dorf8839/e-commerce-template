@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProductItem = props => {
+export default function ProductItem (props) {
   const { product } = props;
   return (
     <div className="column is-half">
@@ -44,5 +44,3 @@ const ProductItem = props => {
     </div>
   );
 };
-
-export default ProductItem;

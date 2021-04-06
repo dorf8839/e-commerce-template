@@ -2,7 +2,7 @@ import React from "react"
 import ProductItem from "./ProductItem";
 import withContext from "../withContext";
 
-const ProductList = props => {
+function ProductList (props) {
   const { products } = props.context;
 
   return (
