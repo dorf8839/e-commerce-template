@@ -31,7 +31,7 @@
     {
       "id": "aoe8wvdxvrkfqsew67",
       "name": "shirts",
-      "stock": 15,
+      "stock": 14,
       "price": 149.99,
       "shortDesc": "Nulla facilisi. Curabitur at lacus ac velit ornare lobortis.",
       "description": "Cras sagittis. Praesent nec nisl a purus blandit viverra. Ut leo. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Fusce a quam."
@@ -39,7 +39,7 @@
     {
       "id": "bmfrurdkswtkfqsf15j",
       "name": "shorts",
-      "stock": 5,
+      "stock": 4,
       "price": 109.99,
       "shortDesc": "Nulla facilisi. Curabitur at lacus ac velit ornare lobortis.",
       "description": "Cras sagittis. Praesent nec nisl a purus blandit viverra. Ut leo. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Fusce a quam."
@@ -48,7 +48,7 @@
       "id": "ml78tg2ktfokn3ktepy",
       "name": "Cake",
       "price": "40",
-      "stock": 199,
+      "stock": 198,
       "shortDesc": "Custom made cakes",
       "description": "Just let us know the flavor and design of the cake and we will make it for you!"
     },
