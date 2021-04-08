@@ -3,6 +3,7 @@ import { Switch, Route, Link, BrowserRouter as Router } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
+import Home from "./components/Home";
 import AddProduct from "./components/AddProduct";
 import Cart from "./components/Cart";
 import Login from "./components/Login";
@@ -137,18 +138,18 @@ export default class App extends Component {
         <Router ref={this.routerRef}>
           <div className="App">
             <nav
-              className="navbar container"
+              className="navbar container is-fluid"
               role="navigation"
               aria-label="main navigation"
             >
               <div className="navbar-brand">
-                <b className="navbar-item is-size-4">ecommerce</b>
+                <img className="navbar-item" src="logo512.png" width="56" height="14"/>
+                <b className="navbar-item is-size-4">E-Commerce Template</b>
                 <label
                   role="button"
-                  class="navbar-burger burger"
+                  className="navbar-burger burger"
                   aria-label="menu"
                   aria-expanded="false"
-                  data-target="navbarBasicExample"
                   onClick={e => {
                     e.preventDefault();
                     this.setState({ showMenu: !this.state.showMenu });
@@ -160,36 +161,48 @@ export default class App extends Component {
                 </label>
               </div>
               <div className={`navbar-menu ${this.state.showMenu ? "is-active" : ""}`}>
-                <Link to="/products" className="navbar-item">
-                  Products
-                </Link>
-                {this.state.user && this.state.user.accessLevel < 1 && (
-                  <Link to="/add-product" className="navbar-item">
-                    Add Product
+                <div className="navbar-start">
+                  <Link to="/products" className="navbar-item">
+                    Products
                   </Link>
-                )}
-                <Link to="/cart" className="navbar-item">
-                  Cart
-                  <span
-                    className="tag is-primary"
-                    style={{ marginLeft: "5px" }}
-                  >
-                    {Object.keys(this.state.cart).length}
-                  </span>
-                </Link>
-                {!this.state.user ? (
-                  <Link to="/login" className="navbar-item">
-                    Login
+                  {this.state.user && this.state.user.accessLevel < 1 && (
+                    <Link to="/add-product" className="navbar-item">
+                      Add Product
+                    </Link>
+                  )}
+                </div>
+                <div className="navbar-end">
+                  <Link to="/cart" className="navbar-item">
+                    Cart
+                    <span
+                      className="tag is-primary"
+                      style={{ marginLeft: "5px" }}
+                    >
+                      {Object.keys(this.state.cart).length}
+                    </span>
                   </Link>
-                ) : (
-                  <Link to="/" onClick={this.logout} className="navbar-item">
-                    Logout
-                  </Link>
-                )}
+                  {!this.state.user ? (
+                    <Link to="/login" className="navbar-item">
+                      <div class="buttons">
+                        <a class="button is-primary">
+                          Login
+                        </a>
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link to="/" onClick={this.logout} className="navbar-item">
+                      <div class="buttons">
+                        <a class="button is-danger is-light">
+                          Logout
+                        </a>
+                      </div>
+                    </Link>
+                  )}
+                </div>
               </div>
             </nav>
             <Switch>
-              <Route exact path="/" component={ProductList} />
+              <Route exact path="/" component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/cart" component={Cart} />
               <Route exact path="/add-product" component={AddProduct} />
