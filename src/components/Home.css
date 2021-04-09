@@ -1,16 +1,64 @@
-
-
 body { background: #2d2d37;}
 a { color: white; text-decoration: none; }
+
+/* .bannerContainer {
+  overflow: hidden;
+} */
+.banner{
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+  top:-20rem;
+  left:-15rem;
+  width: 200vw;
+  height: 75vh;
+  transform: rotate(-0.075turn);
+  opacity: .2;
+  background: linear-gradient(90deg, #ff0000, #ff6f43, #00fa3e, #002fff);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  overflow: hidden;
+}
 
 .arrow {
   text-align: center;
   margin: 0 0;
 }
+
 .bounce {
   -moz-animation: bounce 2s infinite;
   -webkit-animation: bounce 2s infinite;
   animation: bounce 2s infinite;
+}
+
+.slider:focus{
+  outline: none;
+}
+
+.slider{
+  overflow: hidden;
+}
+
+.slider-item{
+  width: 1500px;
+  height: 750px;
+}
+
+/* #carouselItem {
+  width: 1500px;
+  height: 700px;
+} */
+
+.caption {
+  background-color: white;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 10px;
 }
 
 @keyframes bounce {
@@ -22,5 +70,33 @@ a { color: white; text-decoration: none; }
   }
   60% {
     transform: translateY(-15px);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .banner {
+    position: absolute;
+    z-index: 100;
+    top:-15rem;
+    left:-30rem;
+    width: 100vw;
+    height: 75vh;
+    transform: rotate(-0.075turn);
+    opacity: .4;
+    background: linear-gradient(90deg, #ff0000, #ff6f43, #00fa3e, #002fff);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
   }
 }

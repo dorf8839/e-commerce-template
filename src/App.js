@@ -143,8 +143,10 @@ export default class App extends Component {
               aria-label="main navigation"
             >
               <div className="navbar-brand">
-                <img className="navbar-item" src="logo512.png" width="56" height="14"/>
-                <b className="navbar-item is-size-4">E-Commerce Template</b>
+                <Link to="/" className="navbar-item pt-1">
+                  <img alt="" src="avatar.png" width="35" height="14"/>
+                  <b className="is-size-4 pl-2">E-Commerce Template</b>
+                </Link>               
                 <label
                   role="button"
                   className="navbar-burger burger"
@@ -184,17 +186,17 @@ export default class App extends Component {
                   {!this.state.user ? (
                     <Link to="/login" className="navbar-item">
                       <div class="buttons">
-                        <a class="button is-primary">
+                        <button class="button is-primary">
                           Login
-                        </a>
+                        </button>
                       </div>
                     </Link>
                   ) : (
                     <Link to="/" onClick={this.logout} className="navbar-item">
                       <div class="buttons">
-                        <a class="button is-danger is-light">
+                        <button class="button is-danger is-light">
                           Logout
-                        </a>
+                        </button>
                       </div>
                     </Link>
                   )}
