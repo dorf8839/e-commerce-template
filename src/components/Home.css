@@ -1,9 +1,17 @@
-body { background: #2d2d37;}
+body { 
+  background: #2d2d37;
+  overflow: hidden;
+}
 a { color: white; text-decoration: none; }
 
-/* .bannerContainer {
+.bannerContainer {
+  position: absolute;
   overflow: hidden;
-} */
+  width: 100vw;
+  height: 100vh;
+  top: -52px;
+}
+
 .banner{
   position: absolute;
   pointer-events: none;
@@ -16,8 +24,7 @@ a { color: white; text-decoration: none; }
   opacity: .2;
   background: linear-gradient(90deg, #ff0000, #ff6f43, #00fa3e, #002fff);
   background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  overflow: hidden;
+  animation: gradient 10s ease infinite;
 }
 
 .arrow {

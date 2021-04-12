@@ -20,16 +20,16 @@ function Home (props) {
 
   return (
     <>
-      {/* <div className="bannerContainer"> */}
+      <div className="bannerContainer">
         <div className="banner"></div>
-      {/* </div> */}
+      </div>
       
       <section className="hero is-white is-fullheight-with-navbar">
         <div className="hero-head"></div>
         <div className="hero-body">
           <div className="container has-text-centered">
             <p className="title is-size-1">Welcome to the E-Commerce Template!</p>
-            <p className="subtitle">Feel free to browse our products and submit orders for anything you would like.</p>
+            <p className="subtitle">Feel free to browse our products and submit orders for anything we have in stock.</p>
           </div>
         </div>
         <div className="hero-footer">

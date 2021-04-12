@@ -138,14 +138,14 @@ export default class App extends Component {
         <Router ref={this.routerRef}>
           <div className="App">
             <nav
-              className="navbar container is-fluid"
+              className="navbar container is-fluid pl-0"
               role="navigation"
               aria-label="main navigation"
             >
               <div className="navbar-brand">
                 <Link to="/" className="navbar-item pt-1">
                   <img alt="" src="avatar.png" width="35" height="14"/>
-                  <b className="is-size-4 pl-2">E-Commerce Template</b>
+                  <b className="is-size-4-desktop is-size-6-mobile is-size-5-tablet pl-2">E-Commerce Template</b>
                 </Link>               
                 <label
                   role="button"
